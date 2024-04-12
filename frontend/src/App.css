@@ -1,0 +1,44 @@
+body {
+  color: #007BFF;
+  font-family: Arial Rounded MT Bold;
+}
+
+h1 {
+  margin-top: 60px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #B6D9FF;
+  margin-top: 40px;
+  margin-bottom: 10px;
+}
+
+p {
+  color: white;
+}
+
+.need-blue-color {
+  color: #007BFF;
+}
+
+.need-orange-color {
+  color: #FF8300;
+}
+
+.need-red-color {
+  color: red;
+}
+
+.need-blue-background {
+  background-color: #007BFF;
+}
+
+.need-margin-top {
+  margin-top: 50px;
+}
+
+.first-h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
