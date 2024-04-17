@@ -37,7 +37,7 @@ export default function CreateUser() {
         
         try {
             const response = await axios.post('/api/users/register', {username: usernameInput, password: passwordInput});
-            navigate('/');
+            navigate('/PWM');
         } catch (error) {
             console.log(error);
             setError(error.response.data);
