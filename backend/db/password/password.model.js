@@ -15,7 +15,7 @@ function returnAllPassword() {
 function updatePasswordByUrlAndUser(username, url, newPassword) {
   return PasswordModel.findOneAndUpdate(
     { username: username, url: url },
-    { $set: { password: newPassword } },
+    { password: newPassword }, // Simplified, assuming password field directly
     { new: true }
   ).exec();
 }

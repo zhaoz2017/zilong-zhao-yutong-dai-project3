@@ -75,15 +75,16 @@ router.get("/", verifyToken, async function (request, response) {
 // PUT route to update a password for a specific URL
 router.put("/", verifyToken, async function (request, response) {
   const { url, newPassword } = request.body;
+  const username = request.user;
   if (!url || !newPassword) {
     return response.status(400).send("URL and password must be provided");
   }
 
   try {
     const updatedEntry = await PasswordModel.updatePasswordByUrlAndUser(
-      { url: url, username: request.user }, // ensure that the URL belongs to the user
-      { $set: { password: newPassword } },
-      { new: true }
+      username,
+      url,
+      newPassword
     );
     if (!updatedEntry) {
       return response

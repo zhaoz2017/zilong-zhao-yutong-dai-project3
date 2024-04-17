@@ -61,7 +61,13 @@ export default function PWM() {
             setLoading(false);
         }
     };
-    const handleUpdate = async (url, newPassword) => {
+    const handleUpdate = async (url) => {
+        const newPassword = prompt("Please enter the new password for " + url);
+        if (!newPassword) {
+            alert('No new password entered. Update cancelled.');
+            return;
+        }
+    
         try {
             setLoading(true);
             const response = await axios.put('/api/password', { url, newPassword });
@@ -236,7 +242,7 @@ export default function PWM() {
                     {passwords.map((item, index) => (
                         <li key={index} className="list-group-item">
                             URL: {item.url}, Password: {item.password}, DateLastUpdated:{item.date}
-                            <button onClick={() => handleUpdate(item.url, 'newPassword')}>Update</button>
+                            <button onClick={() => handleUpdate(item.url)}>Update</button>
                             <button onClick={() => handleDelete(item.url)}>Delete</button>
                         </li>
                     ))}
