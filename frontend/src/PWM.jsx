@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -24,6 +24,23 @@ export default function PWM() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
+
+
+
+    useEffect(() => {
+        const fetchPasswords = async () => {
+            try {
+                const response = await axios.get('/api/password');
+                setPasswords(response.data);  // Assuming the backend sends an array of passwords
+            } catch (error) {
+                console.error('Error retrieving passwords:', error);
+                setError('Failed to fetch passwords.');
+            }
+        };
+
+        fetchPasswords();
+    }, []);
+
 
     const handleCriteriaChange = (e) => {
         setCriteria({ ...criteria, [e.target.name]: e.target.checked });
@@ -90,7 +107,7 @@ export default function PWM() {
             await axios.post('/api/password', { url, password: finalPassword });
             setSuccessMessage('Password saved successfully!');
             // If you're fetching passwords, do it here to refresh the list
-            setPasswords([...passwords, { url, password: finalPassword }]); // Simulating adding to list
+           // setPasswords([...passwords, { url, password: finalPassword }]); // Simulating adding to list
             // Reset form fields and criteria
             setUrl('');
             setPassword('');

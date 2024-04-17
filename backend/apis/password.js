@@ -62,7 +62,7 @@ router.post("/", verifyToken, async function (request, response) {
 // GET all passwords for the logged-in user
 router.get("/", verifyToken, async function (request, response) {
   try {
-    const password = await PasswordModel.returnAllPasswordsByUsername(
+    const password = await PasswordModel.returnAllPassword(
       request.user.username
     );
     response.json(password);
