@@ -72,4 +72,54 @@ router.get("/", verifyToken, async function (request, response) {
   }
 });
 
+// PUT route to update a password for a specific URL
+router.put("/", verifyToken, async function (request, response) {
+  const { url, newPassword } = request.body;
+  if (!url || !newPassword) {
+    return response.status(400).send("URL and password must be provided");
+  }
+
+  try {
+    const updatedEntry = await PasswordModel.updatePasswordByUrlAndUser(
+      { url: url, username: request.user }, // ensure that the URL belongs to the user
+      { $set: { password: newPassword } },
+      { new: true }
+    );
+    if (!updatedEntry) {
+      return response
+        .status(404)
+        .send("Password entry not found or user mismatch");
+    }
+    response.send(updatedEntry);
+  } catch (error) {
+    console.error("Error updating the password:", error);
+    response.status(500).send("Error updating password");
+  }
+});
+
+// DELETE route to remove a specific URL/password pair
+router.delete("/", verifyToken, async function (request, response) {
+  console.log("deleteing");
+  const url = request.query.url; // URL passed as query parameter
+  const username = request.user;
+  if (!url) {
+    return response.status(400).send("URL must be provided");
+  }
+  try {
+    const result = await PasswordModel.deletePasswordByUrlAndUser(
+      username,
+      url
+    );
+    if (!result) {
+      return response
+        .status(404)
+        .send("No password found with the given URL for this user");
+    }
+    response.send({ message: "Password deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting the password:", error);
+    response.status(500).send("Error deleting password");
+  }
+});
+
 module.exports = router;

@@ -41,6 +41,40 @@ export default function PWM() {
         }
     };
 
+
+    const handleDelete = async (url) => {
+        if (!window.confirm('Are you sure you want to delete this password?')) return;
+
+        try {
+            setLoading(true);
+            const requestUrl = `/api/password?url=${encodeURIComponent(url)}`;
+            console.log('Sending DELETE request to:', requestUrl);
+            const response = await axios.delete(requestUrl);
+
+           // const response = await axios.delete(`/api/password?url=${encodeURIComponent(url)}`);
+            alert('Password deleted successfully');
+            fetchPasswords();  // Refresh the list to remove the deleted item
+        } catch (error) {
+            console.error('Failed to delete password:', error);
+            alert('Failed to delete password');
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleUpdate = async (url, newPassword) => {
+        try {
+            setLoading(true);
+            const response = await axios.put('/api/password', { url, newPassword });
+            alert('Password updated successfully');
+            fetchPasswords();  // Refresh the list to show the updated data
+        } catch (error) {
+            console.error('Failed to update password:', error);
+            alert('Failed to update password');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleCriteriaChange = (e) => {
         setCriteria({ ...criteria, [e.target.name]: e.target.checked });
     };
@@ -201,7 +235,9 @@ export default function PWM() {
                 <ul className="list-group">
                     {passwords.map((item, index) => (
                         <li key={index} className="list-group-item">
-                            URL: {item.url}, Password: {item.password}
+                            URL: {item.url}, Password: {item.password}, DateLastUpdated:{item.date}
+                            <button onClick={() => handleUpdate(item.url, 'newPassword')}>Update</button>
+                            <button onClick={() => handleDelete(item.url)}>Delete</button>
                         </li>
                     ))}
                 </ul>
