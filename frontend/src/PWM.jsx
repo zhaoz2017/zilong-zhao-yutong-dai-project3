@@ -1,5 +1,6 @@
 import React, { useState,useEffect } from 'react';
 
+import './PWM.css'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from "./Navbar";
@@ -26,21 +27,19 @@ export default function PWM() {
     const [loading, setLoading] = useState(false);
 
 
-
     useEffect(() => {
-        const fetchPasswords = async () => {
-            try {
-                const response = await axios.get('/api/password');
-                setPasswords(response.data);  // Assuming the backend sends an array of passwords
-            } catch (error) {
-                console.error('Error retrieving passwords:', error);
-                setError('Failed to fetch passwords.');
-            }
-        };
-
         fetchPasswords();
     }, []);
 
+    const fetchPasswords = async () => {
+        try {
+            const response = await axios.get('/api/password');
+            setPasswords(response.data);  // Assuming the backend sends an array of passwords
+        } catch (error) {
+            console.error('Error retrieving passwords:', error);
+            setError('Failed to fetch passwords.');
+        }
+    };
 
     const handleCriteriaChange = (e) => {
         setCriteria({ ...criteria, [e.target.name]: e.target.checked });
@@ -109,6 +108,7 @@ export default function PWM() {
             // If you're fetching passwords, do it here to refresh the list
            // setPasswords([...passwords, { url, password: finalPassword }]); // Simulating adding to list
             // Reset form fields and criteria
+            fetchPasswords();
             setUrl('');
             setPassword('');
             setCriteria(initialCriteria);
@@ -194,8 +194,10 @@ export default function PWM() {
                     {loading ? 'Saving...' : 'Submit'}
                 </button>
             </form>
+            // Render method
             <div className="mt-4">
-                <h3>Stored Passwords</h3>
+            <h3>Stored Passwords</h3>
+            <div className="scrollable-list">
                 <ul className="list-group">
                     {passwords.map((item, index) => (
                         <li key={index} className="list-group-item">
@@ -204,6 +206,8 @@ export default function PWM() {
                     ))}
                 </ul>
             </div>
+        </div>
+
         </div>
         </AuthProvider>
         </>

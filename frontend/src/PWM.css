@@ -1,0 +1,12 @@
+.truncate {
+  max-width: 150px; /* adjust as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scrollable-list {
+    max-height: 200px;  
+    overflow-y: auto;  
+  }
+  
