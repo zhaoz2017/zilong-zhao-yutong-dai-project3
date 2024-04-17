@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import Navbar from "./Navbar";
 import { AuthProvider } from './AuthContext';
 
+axios.defaults.withCredentials = true;
+
 const initialCriteria = {
     uppercase: false,
     lowercase: false,
@@ -66,6 +68,7 @@ export default function PWM() {
     
         let finalPassword = password;
         if (!finalPassword) {
+            console.log(1111);
             if (length < 4 || length > 50 || Object.values(criteria).every((v) => v === false)) {
                 setError('Please provide valid password generation criteria.');
                 return;
@@ -73,14 +76,14 @@ export default function PWM() {
             finalPassword = generatePassword();
         }
     
-        try {
-            await axios.post('/api/password', { url, password: finalPassword });
-            // Optionally fetch and update the list of passwords here if needed
-            console.log('Password saved successfully.');
-        } catch (error) {
-            console.error('Error saving the password:', error);
-            setError('Failed to save the password.');
-        }
+        // try {
+        //     await axios.post('/api/password', { url, password: finalPassword });
+        //     // Optionally fetch and update the list of passwords here if needed
+        //     console.log('Password saved successfully.');
+        // } catch (error) {
+        //     console.error('Error saving the password:', error);
+        //     setError('Failed to save the password.');
+        // }
 
         setLoading(true);
         try {

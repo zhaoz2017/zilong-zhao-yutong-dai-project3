@@ -25,6 +25,8 @@
   "homepage": "https://github.com/ajorgense1-chwy/cs5610_spr23_mod3#readme",
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "mongodb": "^6.5.0",
     "react-router-dom": "^6.22.3"
   },
