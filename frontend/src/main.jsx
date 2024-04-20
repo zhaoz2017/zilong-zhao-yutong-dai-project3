@@ -7,16 +7,11 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import PokemonDetail from './PokemonDetail';
 import Login from './Login';
 import CreateUser from './CreateUser';
 import PWM from './PWM';
 
 const router = createBrowserRouter([
-  {
-    path: '/pokemon/:pokemonId',
-    element: <PokemonDetail />
-  },
   {
     path: '/login',
     element: <Login />
