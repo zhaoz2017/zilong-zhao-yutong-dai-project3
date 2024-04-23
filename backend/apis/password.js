@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const PasswordModel = require("../db/password/password.model"); // Adjust the path to your Password model
+const UserModel = require("../db/user/user.model");
+const PasswordShareRequestModel = require("../db/passwordShareRequest/passwordShareRequest.model");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -38,28 +40,28 @@ app.get("/set-cookie", (req, res) => {
 
 // POST /api/passwords/share
 router.post("/share", verifyToken, async (req, res) => {
+  console.log("here");
   const { toUsername, passwordId } = req.body;
-  const fromUsername = req.user.username; // Assuming username is stored in req.user
+  const fromUsername = req.user; // Assuming username is stored in req.user
 
   if (toUsername === fromUsername) {
     return res.status(400).send("Cannot share password with yourself.");
   }
-
+  console.log("fddddddddddddddddddddddddddddddddd");
   // Check if the receiving user exists
-  const toUserExists = await UserModel.findOne({ username: toUsername });
+  const toUserExists = await UserModel.findUserByUsername(toUsername);
+  console.log("fddddddddddddddddddddddddddddddddd");
   if (!toUserExists) {
     return res.status(404).send("Receiving user does not exist.");
   }
-
-  // Create a share request
-  const shareRequest = new PasswordShareRequest({
-    fromUser: fromUsername,
-    toUser: toUsername,
-    passwordId: passwordId,
-    status: "pending",
-  });
+  console.log("fddddddddddddddddddddddddddddddddd");
   try {
-    await shareRequest.save();
+    const newPasswordShareRequest =
+      await PasswordShareRequestModel.createShareRequest({
+        fromUser: fromUsername,
+        toUser: toUsername,
+        status: "pending",
+      });
     res.status(201).send("Share request sent successfully.");
   } catch (error) {
     console.error("Failed to create share request:", error);

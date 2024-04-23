@@ -6,7 +6,7 @@ export default function SharedPasswords() {
     useEffect(() => {
         const fetchSharedPasswords = async () => {
             try {
-                const { data } = await axios.get('/api/passwords/shared');
+                const { data } = await axios.get('/api/password/shared');
                 setSharedPasswords(data);
             } catch (error) {
                 console.error('Error fetching shared passwords:', error);

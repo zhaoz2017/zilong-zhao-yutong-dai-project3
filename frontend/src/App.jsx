@@ -10,10 +10,10 @@ import './App.css'
 function App() {
 
   return (
-    <AuthProvider>
+    <>
         <Navbar />
         <Home />
-    </AuthProvider>
+    </>
   );
 
 }

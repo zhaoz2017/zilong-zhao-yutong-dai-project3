@@ -1,20 +1,23 @@
 import React, { useState,useEffect } from 'react';
+import axios from 'axios';
 
-export default  function SharePassword({ username }) {
+export default function SharePassword({ username }) {
     const [shareUsername, setShareUsername] = useState('');
-    const [passwordId, setPasswordId] = useState('');
     const [error, setError] = useState('');
 
     const handleSubmitShare = async (e) => {
         e.preventDefault();
+        console.log(111);
+        console.log(shareUsername);
+        console.log(username);
         if (shareUsername === username) {
             setError("Cannot share with yourself.");
+            console.log(222);
             return;
         }
         try {
-            const response = await axios.post('/api/passwords/share', {
-                toUsername: shareUsername,
-                passwordId
+            const response = await axios.post('/api/password/share', {
+                toUsername: shareUsername
             });
             alert('Share request sent!');
         } catch (error) {
@@ -28,18 +31,13 @@ export default  function SharePassword({ username }) {
             <h3>Share Password</h3>
             <input
                 type="text"
-                placeholder="Enter username to share with"
+                placeholder="Enter username"
                 value={shareUsername}
                 onChange={(e) => setShareUsername(e.target.value)}
             />
-            <input
-                type="text"
-                placeholder="Enter Password ID"
-                value={passwordId}
-                onChange={(e) => setPasswordId(e.target.value)}
-            />
             <button type="submit">Submit</button>
-            {error && <p className="error">{error}</p>}
+            {error && <div className="alert alert-danger mt-2">{error}</div>}
+
         </form>
     );
 }

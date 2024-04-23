@@ -55,8 +55,8 @@ router.post(
   async (req, res) => {
     const requestId = req.params.requestId;
     try {
-      const request = await PasswordShareRequest.findById(requestId);
-      if (!request || request.toUser !== req.user.username) {
+      const request = await PasswordShareRequestModel.findById(requestId);
+      if (!request || request.toUser !== req.user) {
         return res
           .status(404)
           .send(
@@ -84,8 +84,8 @@ router.post(
   async (req, res) => {
     const requestId = req.params.requestId;
     try {
-      const request = await PasswordShareRequest.findById(requestId);
-      if (!request || request.toUser !== req.user.username) {
+      const request = await PasswordShareRequestModel.findById(requestId);
+      if (!request || request.toUser !== req.user) {
         return res
           .status(404)
           .send(

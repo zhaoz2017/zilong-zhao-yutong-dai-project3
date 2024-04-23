@@ -1,10 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AuthContext = createContext({
-    activeUsername: null,
-    logOutUser: () => {}
-});
+const AuthContext = createContext();
 
 
 export const useAuth = () => useContext(AuthContext);
@@ -15,6 +12,7 @@ export const AuthProvider = ({ children }) => {
     async function checkIfUserIsLoggedIn() {
         try {
             const response = await axios.get('/api/users/isLoggedIn');
+            console.log(response.data.username);
             setActiveUsername(response.data.username);
         } catch (error) {
             console.error('Error checking login status:', error);
