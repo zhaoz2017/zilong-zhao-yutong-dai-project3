@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import './SharedPasswords.css'
+import PasswordItem from './PasswordItem';
 
 export default function SharedPasswords({ username }) {
     const [sharedPasswords, setSharedPasswords] = useState([]);
@@ -45,10 +46,17 @@ export default function SharedPasswords({ username }) {
             <div className="scrollable-list">
                 <ul className="list-group">
                     {sharedPasswords.map((password, index) => (
-                        <li key={index} className="list-group-item">
-                            URL: {password.url}, 
-                            Password: {password.password} (Shared by: {password.username})
-                        </li>
+                        // <li key={index} className="list-group-item">
+                        //     URL: {password.url}, 
+                        //     Password: {password.password} (Shared by: {password.username})
+                        // </li>
+                        <PasswordItem 
+                        key={index}
+                        url={password.url}
+                        password={password.password}
+                        username={password.username}
+                         />
+
                     ))}
                 </ul>
             </div>

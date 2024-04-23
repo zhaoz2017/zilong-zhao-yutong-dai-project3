@@ -8,6 +8,7 @@ import { AuthProvider, useAuth} from './AuthContext';
 import SharePassword from './SharePassword';
 import ShareRequests from './ShareRequests';
 import SharedPasswords from './SharedPasswords';
+import PasswordItem from './PasswordItem';
 
 axios.defaults.withCredentials = true;
 
@@ -368,6 +369,15 @@ export default function PWM() {
                                         <button onClick={() => handleUpdate(item.url)}>Update</button>
                                         <button onClick={() => handleDelete(item.url)}>Delete</button>
                                     </li>
+                                    
+                                    // <PasswordItem 
+                                    // key={index}
+                                    // url={password.url}
+                                    // password={password.password}
+                                    // username={password.username}
+                                    //  />
+                                     
+            
                                 ))
                             ) : (
                                 <li className="list-group-item">No passwords stored.</li>
