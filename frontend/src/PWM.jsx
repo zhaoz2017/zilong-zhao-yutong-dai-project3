@@ -30,15 +30,26 @@ export default function PWM() {
     const [loading, setLoading] = useState(false);
     
     const { activeUsername } = useAuth();
-
     useEffect(() => {
-        fetchPasswords();
-    }, []);
-
+        console.log("Component received activeUsername:", activeUsername);
+    }, [activeUsername]);
+  
+    useEffect(() => {
+        // Only call fetchPasswords if activeUsername is not null
+        if (activeUsername) {
+            console.log("Active username available:", activeUsername);
+            fetchPasswords();
+        } else {
+            console.log("Active username not available yet.");
+        }
+    }, [activeUsername]);  // Include activeUsername in the dependency array
     const fetchPasswords = async () => {
         try {
             const response = await axios.get('/api/password');
-            setPasswords(response.data);  // Assuming the backend sends an array of passwords
+            const userPasswords = response.data.filter(p => p.username === activeUsername);
+            console.log("test avtiveusername" + activeUsername);
+            console.log(userPasswords+"tetetetetett");
+            setPasswords(userPasswords);  // Assuming the backend sends an array of passwords
         } catch (error) {
             console.error('Error retrieving passwords:', error);
             setError('Failed to fetch passwords.');
@@ -169,7 +180,7 @@ export default function PWM() {
 
     return (
         <>
-        <AuthProvider>
+        {/* <AuthProvider>
         <Navbar />
         <div className="container">
             <h2>Manage Your Passwords</h2>
@@ -246,25 +257,131 @@ export default function PWM() {
             
             <ShareRequests username={activeUsername} />
 
-            <SharedPasswords />
+            <SharedPasswords username={activeUsername} />
 
             // Render method
             <div className="mt-4">
             <h3>Stored Passwords</h3>
             <div className="scrollable-list">
                 <ul className="list-group">
-                    {passwords.map((item, index) => (
-                        <li key={index} className="list-group-item">
-                            URL: {item.url}, Password: {item.password}, DateLastUpdated:{item.date}
-                            <button onClick={() => handleUpdate(item.url)}>Update</button>
-                            <button onClick={() => handleDelete(item.url)}>Delete</button>
-                        </li>
-                    ))}
+                    {passwords.length > 0 ? (
+                        passwords.map((item, index) => (
+                            <li key={index} className="list-group-item">
+                                URL: {item.url}, Password: {item.password}, DateLastUpdated: {item.date}
+                                <button onClick={() => handleUpdate(item.url)}>Update</button>
+                                <button onClick={() => handleDelete(item.url)}>Delete</button>
+                            </li>
+                        ))
+                    ) : (
+                        <li className="list-group-item">No passwords stored.</li>
+                    )}
                 </ul>
             </div>
+
         </div>
 
         </div>
+        </AuthProvider> */}
+
+<AuthProvider>
+<Navbar />
+            {activeUsername ? (
+                <div className="container">
+              
+                    <h2>Manage Your Passwords</h2>
+                    <form onSubmit={handleSubmit}>
+                        {error && <p className='alert alert-danger'>{error}</p>}
+                        {successMessage && <div className="alert alert-success">{successMessage}</div>}
+                        <div className="mb-3">
+                            <label htmlFor="url" className="form-label">URL</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="url"
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="password" className="form-label">Password (optional)</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="length" className="form-label">Length (4-50)</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="length"
+                                min="4"
+                                max="50"
+                                value={length}
+                                onChange={(e) => setLength(parseInt(e.target.value))}
+                            />
+                        </div>
+                        <div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" id="uppercase" name="uppercase" checked={criteria.uppercase} onChange={handleCriteriaChange} />
+                                <label className="form-check-label" htmlFor="uppercase">
+                                    Include Uppercase Letters
+                                </label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" id="lowercase" name="lowercase" checked={criteria.lowercase} onChange={handleCriteriaChange} />
+                                <label className="form-check-label" htmlFor="lowercase">
+                                    Include Lowercase Letters
+                                </label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" id="numbers" name="numbers" checked={criteria.numbers} onChange={handleCriteriaChange} />
+                                <label className="form-check-label" htmlFor="numbers">
+                                    Include Numbers
+                                </label>
+                            </div>
+                            <div className="form-check">
+                                <input className="form-check-input" type="checkbox" id="symbols" name="symbols" checked={criteria.symbols} onChange={handleCriteriaChange} />
+                                <label className="form-check-label" htmlFor="symbols">
+                                    Include Symbols
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" className="btn btn-primary mt-3" disabled={loading}>
+                            {loading ? 'Saving...' : 'Submit'}
+                        </button>
+                    </form>
+
+
+                    {/* 依赖于 activeUsername 的组件 */}
+                    <SharePassword username={activeUsername} />
+                    <ShareRequests username={activeUsername} />
+                    <div className="mt-4">
+                        <h3>Stored Passwords</h3>
+                        <div className="scrollable-list">
+                        <ul className="list-group">
+                            {passwords.length > 0 ? (
+                                passwords.map((item, index) => (
+                                    <li key={index} className="list-group-item">
+                                        URL: {item.url}, Password: {item.password}, DateLastUpdated: {item.date}
+                                        <button onClick={() => handleUpdate(item.url)}>Update</button>
+                                        <button onClick={() => handleDelete(item.url)}>Delete</button>
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="list-group-item">No passwords stored.</li>
+                            )}
+                        </ul>
+                    </div>
+                    </div>
+                    <SharedPasswords username={activeUsername} />
+                </div>
+            ) : (
+                <div>Loading or user not logged in</div>  // 可以显示加载中或者未登录的提示
+            )}
         </AuthProvider>
         </>
     )

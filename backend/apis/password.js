@@ -54,7 +54,7 @@ router.post("/share", verifyToken, async (req, res) => {
   if (!toUserExists) {
     return res.status(404).send("Receiving user does not exist.");
   }
-  console.log("fddddddddddddddddddddddddddddddddd");
+
   try {
     const newPasswordShareRequest =
       await PasswordShareRequestModel.createShareRequest({
@@ -92,6 +92,19 @@ router.post("/", verifyToken, async function (request, response) {
     return response.status(500).send(error);
   }
 });
+
+// GET all shared passwords for the logged-in user
+// router.get("/shared", verifyToken, async function (request, response) {
+//   try {
+//     const password = await PasswordModel.returnAllPassword(
+//       request.user.username
+//     );
+//     response.json(password);
+//   } catch (error) {
+//     console.error("Error retrieving password entries:", error);
+//     response.status(500).send(error);
+//   }
+// });
 
 // GET all passwords for the logged-in user
 router.get("/", verifyToken, async function (request, response) {
