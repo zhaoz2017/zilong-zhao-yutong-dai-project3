@@ -2,10 +2,16 @@ import React from 'react';
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const { activeUsername, logOutUser } = useAuth();
+    const navigate = useNavigate();
 
+    const handleLogOut = async () => {
+        await logOutUser();
+        navigate('/login');  // 重定向到登录页面
+    }
     return (
         <nav className="navbar navbar-expand-sm navbar-dark bg-primary">
             <div className="container-fluid">
@@ -29,7 +35,7 @@ const Navbar = () => {
                                     <ul className="dropdown-menu gap-1 p-2 rounded-3 mx-0 shadow">
                                         <li><NavLink to="/pwm" className="dropdown-item rounded-2">Manage Passwords</NavLink></li>
                                         <li><hr className="dropdown-divider"></hr></li>
-                                        <li><button onClick={logOutUser} className="dropdown-item rounded-2">Log Out</button></li>
+                                        <li><button onClick={handleLogOut} className="dropdown-item rounded-2">Log Out</button></li>
                                     </ul>
                                 </li>
                             </>

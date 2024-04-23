@@ -29,10 +29,8 @@ export default function PWM() {
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
     
-    const { activeUsername } = useAuth();
-    useEffect(() => {
-        console.log("Component received activeUsername:", activeUsername);
-    }, [activeUsername]);
+    const { activeUsername,logOutUser } = useAuth();
+
   
     useEffect(() => {
         // Only call fetchPasswords if activeUsername is not null

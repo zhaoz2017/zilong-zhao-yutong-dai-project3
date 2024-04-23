@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
     }, [activeUsername]);
     useEffect(() => {
         checkIfUserIsLoggedIn();
-    }, []);
+    }, [activeUsername]);
 
     return (
         <AuthContext.Provider value={{ activeUsername, logOutUser }}>
