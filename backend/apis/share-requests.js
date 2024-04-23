@@ -42,7 +42,6 @@ router.get("/", verifyToken, async (req, res) => {
   const username = req.user;
   try {
     const requests = await PasswordShareRequestModel.getShareRequests(username);
-    console.log(requests + "ssss");
     res.json(requests);
   } catch (error) {
     console.error("Failed to retrieve share requests:", error);
@@ -51,66 +50,60 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 // POST /api/share-requests/:requestId/accept
-router.post(
-  "/share-requests/:requestId/accept",
-  verifyToken,
-  async (req, res) => {
-    const requestId = req.params.requestId;
-    try {
-      const request =
-        await PasswordShareRequestModel.acceptAndSharePasswordsMutually(
-          requestId
-        );
-      if (
-        !request ||
-        (request.toUser !== req.user && request.fromUser !== req.user)
-      ) {
-        return res
-          .status(404)
-          .send(
-            "Request not found or you do not have permission to accept this request."
-          );
-      }
-
-      res.send(
-        "Request accepted and passwords shared mutually between " +
-          request.fromUser +
-          " and " +
-          request.toUser
-      );
-    } catch (error) {
-      console.error("Error accepting share request:", error);
-      res.status(500).send("Error accepting share request.");
-    }
-  }
-);
-
-// POST /api/share-requests/:requestId/reject
-router.post(
-  "/share-requests/:requestId/reject",
-  verifyToken,
-  async (req, res) => {
-    const requestId = req.params.requestId;
-    try {
-      const request = await PasswordShareRequestModel.rejectShareRequest(
+router.post("/:requestId/accept", verifyToken, async (req, res) => {
+  const requestId = req.params.requestId;
+  console.log("989898989");
+  try {
+    const request =
+      await PasswordShareRequestModel.acceptAndSharePasswordsMutually(
         requestId
       );
-      if (!request || request.toUser !== req.user) {
-        return res
-          .status(404)
-          .send(
-            "Request not found or you do not have permission to reject this request."
-          );
-      }
-
-      request.status = "rejected";
-      await request.save();
-      res.send("Request rejected.");
-    } catch (error) {
-      console.error("Error rejecting share request:", error);
-      res.status(500).send("Error rejecting share request.");
+    if (
+      !request ||
+      (request.toUser !== req.user && request.fromUser !== req.user)
+    ) {
+      return res
+        .status(404)
+        .send(
+          "Request not found or you do not have permission to accept this request."
+        );
     }
+
+    res.send(
+      "Request accepted and passwords shared mutually between " +
+        request.fromUser +
+        " and " +
+        request.toUser
+    );
+  } catch (error) {
+    console.error("Error accepting share request:", error);
+    res.status(500).send("Error accepting share request.");
   }
-);
+});
+
+// POST /api/share-requests/:requestId/reject
+router.post("/:requestId/reject", verifyToken, async (req, res) => {
+  const requestId = req.params.requestId;
+  console.log("51515515151");
+  try {
+    const request = await PasswordShareRequestModel.rejectShareRequest(
+      requestId
+    );
+    if (!request || request.toUser !== req.user) {
+      return res
+        .status(404)
+        .send(
+          "Request not found or you do not have permission to reject this request."
+        );
+    }
+
+    request.status = "rejected";
+    await request.save();
+    res.send("Request rejected.");
+  } catch (error) {
+    console.error("Error rejecting share request:", error);
+    res.status(500).send("Error rejecting share request.");
+  }
+});
 
 module.exports = router;

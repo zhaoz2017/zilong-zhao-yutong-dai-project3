@@ -5,18 +5,17 @@ import './ShareRequests.css'
 export default  function ShareRequests({ username }) {
     const [requests, setRequests] = useState([]);
 
+    const fetchShareRequests = async () => {
+        try {
+            const response = await axios.get('/api/share-requests');
+            console.log(response.data+"ssss");
+            setRequests(response.data);
+        } catch (error) {
+            console.error('Failed to fetch share requests:', error);
+        }
+    };
     useEffect(() => {
         console.log("重新刷新了");
-        const fetchShareRequests = async () => {
-            try {
-                const response = await axios.get('/api/share-requests');
-                console.log(response.data+"ssss");
-                setRequests(response.data);
-            } catch (error) {
-                console.error('Failed to fetch share requests:', error);
-            }
-        };
-
         fetchShareRequests();
     }, [username]);
 
@@ -41,13 +40,14 @@ export default  function ShareRequests({ username }) {
     return (
         <div>
             <h3>Incoming Share Requests</h3>
-            {requests.map((request) => (
+            {requests.filter(request => request.status === 'pending').map((request) => (
                 <div key={request._id}>
                     <p>{request.fromUser} wants to share a password with you.</p>
-                    <button onClick={() => handleAccept(request._id)}>Accssept</button>
+                    <button onClick={() => handleAccept(request._id)}>Accept</button>
                     <button onClick={() => handleReject(request._id)}>Reject</button>
                 </div>
             ))}
+            {requests.filter(request => request.status === 'pending').length === 0 && <p>No pending share requests.</p>}
         </div>
     );
 }

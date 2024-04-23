@@ -10,12 +10,8 @@ const PasswordShareRequestModel = mongoose.model(
 );
 
 async function acceptAndSharePasswordsMutually(requestId) {
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
-    const request = await PasswordShareRequestModel.findById(requestId)
-      .session(session)
-      .exec();
+    const request = await PasswordShareRequestModel.findById(requestId).exec();
     if (!request) {
       throw new Error("Request not found");
     }
@@ -24,19 +20,14 @@ async function acceptAndSharePasswordsMutually(requestId) {
       request.fromUser,
       request.toUser
     );
-    request.status = "accepted";
-    await request.save({ session });
 
-    await session.commitTransaction();
-    session.endSession();
+    request.status = "accepted";
+    await request.save();
     return request;
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
+    throw error; // 直接传递错误
   }
 }
-
 function createShareRequest(data) {
   return PasswordShareRequestModel.create(data);
 }

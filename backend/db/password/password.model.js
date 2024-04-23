@@ -27,28 +27,20 @@ function deletePasswordByUrlAndUser(username, url) {
   }).exec();
 }
 async function sharePasswordsMutually(user1, user2) {
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     // User1 的密码共享给 User2
-    await this.updateMany(
+    await PasswordModel.updateMany(
       { username: user1 },
-      { $addToSet: { sharedWith: user2 } },
-      { session }
-    ).exec();
-    // User2 的密码共享给 User1
-    await this.updateMany(
-      { username: user2 },
-      { $addToSet: { sharedWith: user1 } },
-      { session }
-    ).exec();
+      { $addToSet: { sharedWith: user2 } }
+    );
 
-    await session.commitTransaction();
-    session.endSession();
+    // User2 的密码共享给 User1
+    await PasswordModel.updateMany(
+      { username: user2 },
+      { $addToSet: { sharedWith: user1 } }
+    );
   } catch (error) {
-    await session.abortTransaction();
-    session.endSession();
-    throw error;
+    throw error; // 直接传递错误
   }
 }
 module.exports = {
