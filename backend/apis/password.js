@@ -41,7 +41,7 @@ app.get("/set-cookie", (req, res) => {
 // POST /api/passwords/share
 router.post("/share", verifyToken, async (req, res) => {
   console.log("here");
-  const { toUsername, passwordId } = req.body;
+  const { toUsername } = req.body;
   const fromUsername = req.user; // Assuming username is stored in req.user
 
   if (toUsername === fromUsername) {

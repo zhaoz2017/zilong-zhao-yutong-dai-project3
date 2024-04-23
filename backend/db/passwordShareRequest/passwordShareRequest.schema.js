@@ -11,11 +11,6 @@ exports.PasswordShareRequestSchema = new Schema(
       type: String,
       required: true,
     },
-    passwordId: {
-      type: Schema.Types.ObjectId,
-      ref: "Password",
-      required: true,
-    },
     status: {
       type: String,
       enum: ["pending", "accepted", "rejected"],

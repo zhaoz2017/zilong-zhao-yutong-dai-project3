@@ -2,6 +2,7 @@ const express = require("express");
 const helper = require("./apis/helper");
 const users = require("./apis/user");
 const password = require("./apis/password");
+const shareRequest = require("./apis/share-requests");
 const cookieParser = require("cookie-parser");
 const app = express();
 const mongoose = require("mongoose");
@@ -37,6 +38,7 @@ app.use(cookieParser());
 
 app.use("/api/users/", users);
 app.use("/api/password/", password);
+app.use("/api/share-requests/", shareRequest);
 
 let frontend_dir = path.join(__dirname, "..", "frontend", "dist");
 

@@ -20,7 +20,6 @@ exports.PasswordSchema = new Schema(
     },
     sharedWith: [
       {
-        // 存储被授权的用户的用户名
         type: String,
       },
     ],

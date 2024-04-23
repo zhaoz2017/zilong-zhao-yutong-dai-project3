@@ -37,10 +37,12 @@ app.get("/set-cookie", (req, res) => {
 });
 
 // GET /api/share-requests
-router.get("/share-requests", verifyToken, async (req, res) => {
-  const username = req.user.username;
+router.get("/", verifyToken, async (req, res) => {
+  console.log("testtestetetesttestetestst");
+  const username = req.user;
   try {
-    const requests = await PasswordShareRequest.find({ toUser: username });
+    const requests = await PasswordShareRequestModel.getShareRequests(username);
+    console.log(requests + "ssss");
     res.json(requests);
   } catch (error) {
     console.error("Failed to retrieve share requests:", error);
@@ -55,8 +57,14 @@ router.post(
   async (req, res) => {
     const requestId = req.params.requestId;
     try {
-      const request = await PasswordShareRequestModel.findById(requestId);
-      if (!request || request.toUser !== req.user) {
+      const request =
+        await PasswordShareRequestModel.acceptAndSharePasswordsMutually(
+          requestId
+        );
+      if (
+        !request ||
+        (request.toUser !== req.user && request.fromUser !== req.user)
+      ) {
         return res
           .status(404)
           .send(
@@ -64,12 +72,12 @@ router.post(
           );
       }
 
-      request.status = "accepted";
-      await request.save();
-      await PasswordModel.findByIdAndUpdate(request.passwordId, {
-        $push: { sharedWith: request.toUser },
-      });
-      res.send("Request accepted and password shared.");
+      res.send(
+        "Request accepted and passwords shared mutually between " +
+          request.fromUser +
+          " and " +
+          request.toUser
+      );
     } catch (error) {
       console.error("Error accepting share request:", error);
       res.status(500).send("Error accepting share request.");
@@ -84,7 +92,9 @@ router.post(
   async (req, res) => {
     const requestId = req.params.requestId;
     try {
-      const request = await PasswordShareRequestModel.findById(requestId);
+      const request = await PasswordShareRequestModel.rejectShareRequest(
+        requestId
+      );
       if (!request || request.toUser !== req.user) {
         return res
           .status(404)

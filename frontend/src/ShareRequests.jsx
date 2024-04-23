@@ -1,13 +1,17 @@
 import React, { useState,useEffect } from 'react';
+import axios from 'axios';
+import './ShareRequests.css'
 
 export default  function ShareRequests({ username }) {
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
+        console.log("重新刷新了");
         const fetchShareRequests = async () => {
             try {
-                const { data } = await axios.get('/api/share-requests', { params: { username } });
-                setRequests(data);
+                const response = await axios.get('/api/share-requests');
+                console.log(response.data+"ssss");
+                setRequests(response.data);
             } catch (error) {
                 console.error('Failed to fetch share requests:', error);
             }
@@ -40,7 +44,7 @@ export default  function ShareRequests({ username }) {
             {requests.map((request) => (
                 <div key={request._id}>
                     <p>{request.fromUser} wants to share a password with you.</p>
-                    <button onClick={() => handleAccept(request._id)}>Accept</button>
+                    <button onClick={() => handleAccept(request._id)}>Accssept</button>
                     <button onClick={() => handleReject(request._id)}>Reject</button>
                 </div>
             ))}
