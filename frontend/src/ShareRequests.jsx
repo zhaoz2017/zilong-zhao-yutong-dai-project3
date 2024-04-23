@@ -8,17 +8,27 @@ export default  function ShareRequests({ username }) {
     const fetchShareRequests = async () => {
         try {
             const response = await axios.get('/api/share-requests');
-            console.log(response.data+"ssss");
+            
             setRequests(response.data);
         } catch (error) {
             console.error('Failed to fetch share requests:', error);
         }
     };
+    // useEffect(() => {
+    //     console.log("重新刷新了");
+    //     fetchShareRequests();
+    // }, [username]);
     useEffect(() => {
-        console.log("重新刷新了");
-        fetchShareRequests();
-    }, [username]);
+        const interval = setInterval(() => {
+            axios.get('/api/share-requests')
+                .then(response => {
+                    setRequests(response.data);
+                })
+                .catch(error => console.error('Error fetching share requests:', error));
+        }, 1000); 
 
+        return () => clearInterval(interval);
+    }, []);
     const handleAccept = async (requestId) => {
         try {
             await axios.post(`/api/share-requests/${requestId}/accept`);
