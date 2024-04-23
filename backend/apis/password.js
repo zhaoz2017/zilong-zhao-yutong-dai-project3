@@ -35,6 +35,38 @@ app.get("/set-cookie", (req, res) => {
   res.cookie("token", "example_token", options);
   res.send("Cookie has been set");
 });
+
+// POST /api/passwords/share
+router.post("/share", verifyToken, async (req, res) => {
+  const { toUsername, passwordId } = req.body;
+  const fromUsername = req.user.username; // Assuming username is stored in req.user
+
+  if (toUsername === fromUsername) {
+    return res.status(400).send("Cannot share password with yourself.");
+  }
+
+  // Check if the receiving user exists
+  const toUserExists = await UserModel.findOne({ username: toUsername });
+  if (!toUserExists) {
+    return res.status(404).send("Receiving user does not exist.");
+  }
+
+  // Create a share request
+  const shareRequest = new PasswordShareRequest({
+    fromUser: fromUsername,
+    toUser: toUsername,
+    passwordId: passwordId,
+    status: "pending",
+  });
+  try {
+    await shareRequest.save();
+    res.status(201).send("Share request sent successfully.");
+  } catch (error) {
+    console.error("Failed to create share request:", error);
+    res.status(500).send("Failed to create share request.");
+  }
+});
+
 // POST to save a new password entry
 router.post("/", verifyToken, async function (request, response) {
   const { url, password } = request.body;

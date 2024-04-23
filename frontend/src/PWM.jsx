@@ -4,7 +4,10 @@ import './PWM.css'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from "./Navbar";
-import { AuthProvider } from './AuthContext';
+import { AuthProvider, useAuth} from './AuthContext';
+import SharePassword from './SharePassword';
+import ShareRequests from './ShareRequests';
+import SharedPasswords from './SharedPasswords';
 
 axios.defaults.withCredentials = true;
 
@@ -25,7 +28,8 @@ export default function PWM() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
-
+    
+    const { activeUsername } = useAuth();
 
     useEffect(() => {
         fetchPasswords();
@@ -234,6 +238,16 @@ export default function PWM() {
                     {loading ? 'Saving...' : 'Submit'}
                 </button>
             </form>
+
+
+           
+            <SharePassword username={activeUsername} />
+
+            
+            <ShareRequests username={activeUsername} />
+
+            <SharedPasswords />
+
             // Render method
             <div className="mt-4">
             <h3>Stored Passwords</h3>
