@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import './SharedPasswords.css'
 import PasswordItem from './PasswordItem';
 
 export default function SharedPasswords({ username }) {
@@ -61,7 +60,11 @@ export default function SharedPasswords({ username }) {
                 </ul>
             </div>
         ) : (
-            <p>No shared passwords.</p>  // Use a paragraph for consistency if the list is empty
+            <div class="card need-blue-background need-white-color">
+                <div class="card-body">
+                    <p>No shared passwords.</p> 
+                </div>
+            </div>
         )}
     </div>
 );

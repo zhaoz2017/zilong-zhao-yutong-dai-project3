@@ -35,7 +35,7 @@ export default function SharePassword({ username }) {
                 value={shareUsername}
                 onChange={(e) => setShareUsername(e.target.value)}
             />
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-primary mt-3">Submit</button>
             {error && <div className="alert alert-danger mt-2">{error}</div>}
 
         </form>

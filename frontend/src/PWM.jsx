@@ -369,8 +369,6 @@ export default function PWM() {
                         </button>
                     </form>
 
-
-                    {/* 依赖于 activeUsername 的组件 */}
                     <SharePassword username={activeUsername} />
                     <ShareRequests username={activeUsername} />
                     <div className="mt-4">
@@ -381,10 +379,10 @@ export default function PWM() {
                                 passwords.map((item, index) => (
                                     <li key={index} className="list-group-item">
                                         URL: {item.url}, Password: {visible[index] ? item.password : '••••••••'}, DateLastUpdated: {item.date}
-                                        <button onClick={() => toggleVisibility(index)}>{visible[index] ? 'Hide' : 'Show'}</button>
-                                        <button onClick={() => handleCopy(item.password)}>Copy</button>
-                                        <button onClick={() => handleUpdate(item.url)}>Update</button>
-                                        <button onClick={() => handleDelete(item.url)}>Delete</button>
+                                        <button class="btn btn-primary mt-3" onClick={() => toggleVisibility(index)}>{visible[index] ? 'Hide' : 'Show'}</button>
+                                        <button class="btn btn-primary mt-3" onClick={() => handleCopy(item.password)}>Copy</button>
+                                        <button class="btn btn-primary mt-3" onClick={() => handleUpdate(item.url)}>Update</button>
+                                        <button class="btn btn-primary mt-3" onClick={() => handleDelete(item.url)}>Delete</button>
                                     </li>
                         
                                               
@@ -398,7 +396,11 @@ export default function PWM() {
             
                                 ))
                             ) : (
-                                <li id='nopassword' >No passwords stored.</li>
+                                <div class="card need-blue-background need-white-color">
+                                    <div class="card-body">
+                                        <p>No shared passwords.</p> 
+                                    </div>
+                                </div>
                             )}
                         </ul>
                     </div>

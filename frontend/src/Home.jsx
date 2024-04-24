@@ -36,7 +36,7 @@ export default function Home() {
                     <p>Zilong Zhao</p>
 
                     <h2>Github repo</h2>
-                    <p></p>
+                    <p>https://github.com/zhaoz2017/zilong-zhao-yutong-dai-project3</p>
                     
                 </div>
             </div>

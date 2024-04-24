@@ -1,6 +1,5 @@
 import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import './ShareRequests.css'
 
 export default  function ShareRequests({ username }) {
     const [requests, setRequests] = useState([]);
@@ -50,14 +49,19 @@ export default  function ShareRequests({ username }) {
     return (
         <div>
             <h3>Incoming Share Requests</h3>
-            {requests.filter(request => request.status === 'pending').map((request) => (
-                <div key={request._id}>
-                    <p>{request.fromUser} wants to share a password with you.</p>
-                    <button onClick={() => handleAccept(request._id)}>Accept</button>
-                    <button onClick={() => handleReject(request._id)}>Reject</button>
+            <div class="card need-blue-background need-white-color">
+                <div class="card-body">
+                    {requests.filter(request => request.status === 'pending').map((request) => (
+                    <div key={request._id}>
+                        <p>{request.fromUser} wants to share a password with you.</p>
+                        <button class="btn btn-primary mt-3" onClick={() => handleAccept(request._id)}>Accept</button>
+                        <button class="btn btn-primary mt-3" onClick={() => handleReject(request._id)}>Reject</button>
+                    </div>
+                    ))}
+                    {requests.filter(request => request.status === 'pending').length === 0 && <p>No pending share requests.</p>}
                 </div>
-            ))}
-            {requests.filter(request => request.status === 'pending').length === 0 && <p>No pending share requests.</p>}
+            </div>
+
         </div>
     );
 }
