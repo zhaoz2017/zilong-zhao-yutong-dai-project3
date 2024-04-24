@@ -31,7 +31,16 @@ export const AuthProvider = ({ children }) => {
             console.error('Error checking login status:', error);
         }
     }
-    
+    const logInUser = async (username, password) => {
+        try {
+            const response = await axios.post('/api/users/login', { username, password });
+            setActiveUsername(username);  // 更新状态
+            return response.data;  // 返回数据
+        } catch (error) {
+            throw error;  // 抛出错误以便捕获
+        }
+    };
+
     async function logOutUser() {
         try {
             await axios.post('/api/users/logOut');
@@ -48,7 +57,7 @@ export const AuthProvider = ({ children }) => {
     }, [activeUsername]);
 
     return (
-        <AuthContext.Provider value={{ activeUsername, logOutUser }}>
+        <AuthContext.Provider value={{ activeUsername, logOutUser,logInUser }}>
             {children}
         </AuthContext.Provider>
     );

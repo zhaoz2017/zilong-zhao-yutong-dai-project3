@@ -3,13 +3,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import Navbar from "./Navbar";
+import { useAuth } from './AuthContext';
 import { AuthProvider } from './AuthContext';
 
 export default function Login() {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
 
-    const [error, setErrorValue] = useState('');
+    const [error, setError] = useState('');
+
+    const { logInUser } = useAuth();
     const navigate = useNavigate();
 
     function setUsername(event) {
@@ -22,16 +25,27 @@ export default function Login() {
         setPasswordInput(pswd);
     }
 
-    async function submit() {
-        setErrorValue('');
-        try {
-            const response = await axios.post('/api/users/login', {username: usernameInput, password: passwordInput})
-            navigate('/PWM');
-        } catch (e) {
-            console.log(error);
-            setErrorValue(e.response.data);
-        }
+    // async function submit() {
+    //     setErrorValue('');
+    //     try {
+    //         const response = await axios.post('/api/users/login', {username: usernameInput, password: passwordInput})
+    //         navigate('/PWM');
+    //     } catch (e) {
+    //         console.log(error);
+    //         setErrorValue(e.response.data);
+    //     }
 
+    // }
+
+    async function submit() {
+        setError('');
+        try {
+            await logInUser(usernameInput, passwordInput);  // 使用认证上下文的登录方法
+            navigate('/PWM');  // 登录成功，导航到主界面
+        } catch (e) {
+            console.error(e);
+            setError(e.response?.data || "Failed to login.");  // 显示错误信息
+        }
     }
 
     return (

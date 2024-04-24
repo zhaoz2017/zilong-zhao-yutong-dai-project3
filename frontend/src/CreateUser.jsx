@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import Navbar from "./Navbar";
 import { AuthProvider } from './AuthContext';
+import { useAuth } from './AuthContext'; 
 
 export default function CreateUser() {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-
+    const { logInUser } = useAuth();
     const navigate = useNavigate();
 
     function setUsername(event) {
@@ -28,19 +29,38 @@ export default function CreateUser() {
         setConfirmPassword(confirmPswd);
     }
 
-    async function submit() {
-        // Check if passwords match before attempting to register
+    // async function submit() {
+    //     // Check if passwords match before attempting to register
+    //     if (passwordInput !== confirmPassword) {
+    //         setError('Passwords do not match.');
+    //         return;
+    //     }
+        
+    //     try {
+    //         const response = await axios.post('/api/users/register', {username: usernameInput, password: passwordInput});
+    //         navigate('/PWM');
+    //     } catch (error) {
+    //         console.log(error);
+    //         setError(error.response.data);
+    //     }
+    // }
+    async function handleSubmit(event) {
+        event.preventDefault(); // 阻止表单默认提交
         if (passwordInput !== confirmPassword) {
             setError('Passwords do not match.');
             return;
         }
-        
+
         try {
-            const response = await axios.post('/api/users/register', {username: usernameInput, password: passwordInput});
-            navigate('/PWM');
+            await axios.post('/api/users/register', {
+                username: usernameInput,
+                password: passwordInput
+            });
+            await logInUser(usernameInput, passwordInput); // 注册后立即登录
+            navigate('/PWM'); // 跳转到主界面
         } catch (error) {
-            console.log(error);
-            setError(error.response.data);
+            console.error(error);
+            setError(error.response.data || 'Failed to create account.');
         }
     }
 
@@ -88,7 +108,7 @@ export default function CreateUser() {
 
                     <div class="row">
                         <div class="col">
-                            <button type="button" className="btn btn-primary" onClick={submit}>Create Account</button>
+                            <button type="button" className="btn btn-primary" onClick={handleSubmit}>Create Account</button>
                         </div>
                         <div class="col">
                             <NavLink to="/login" className="nav-link">Already have an account?</NavLink>

@@ -398,7 +398,7 @@ export default function PWM() {
             
                                 ))
                             ) : (
-                                <li className="list-group-item">No passwords stored.</li>
+                                <li id='nopassword' >No passwords stored.</li>
                             )}
                         </ul>
                     </div>

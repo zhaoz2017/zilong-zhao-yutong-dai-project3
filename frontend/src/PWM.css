@@ -10,3 +10,10 @@
     overflow-y: auto;  
   }
   
+#nopassword {
+  display: flex;
+  justify-content: space-between;
+  background-color: lightskyblue;
+  color: black;
+
+}
