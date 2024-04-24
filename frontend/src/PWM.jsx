@@ -29,7 +29,7 @@ export default function PWM() {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [loading, setLoading] = useState(false);
-    
+    const [visible, setVisible] = useState({});
     const { activeUsername,logOutUser } = useAuth();
 
   
@@ -49,12 +49,27 @@ export default function PWM() {
             console.log("test avtiveusername" + activeUsername);
             console.log(userPasswords+"tetetetetett");
             setPasswords(userPasswords);  // Assuming the backend sends an array of passwords
+            const newVisibility = {};
+            userPasswords.forEach((item, index) => newVisibility[index] = false);
+            setVisible(newVisibility);
         } catch (error) {
             console.error('Error retrieving passwords:', error);
             setError('Failed to fetch passwords.');
         }
     };
 
+    const handleCopy = async (password) => {
+        try {
+            await navigator.clipboard.writeText(password);
+            alert('Password copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy:', err);
+        }
+    };
+
+    const toggleVisibility = index => {
+        setVisible(prev => ({ ...prev, [index]: !prev[index] }));
+    };
 
     const handleDelete = async (url) => {
         if (!window.confirm('Are you sure you want to delete this password?')) return;
@@ -365,11 +380,14 @@ export default function PWM() {
                             {passwords.length > 0 ? (
                                 passwords.map((item, index) => (
                                     <li key={index} className="list-group-item">
-                                        URL: {item.url}, Password: {item.password}, DateLastUpdated: {item.date}
+                                        URL: {item.url}, Password: {visible[index] ? item.password : '••••••••'}, DateLastUpdated: {item.date}
+                                        <button onClick={() => toggleVisibility(index)}>{visible[index] ? 'Hide' : 'Show'}</button>
+                                        <button onClick={() => handleCopy(item.password)}>Copy</button>
                                         <button onClick={() => handleUpdate(item.url)}>Update</button>
                                         <button onClick={() => handleDelete(item.url)}>Delete</button>
                                     </li>
-                                    
+                        
+                                              
                                     // <PasswordItem 
                                     // key={index}
                                     // url={password.url}
