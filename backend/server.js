@@ -9,11 +9,11 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
 
-// const mongoDBEndpoint = 'mongodb+srv://zilongz0904:D0jvTK97W45Iq41s@cluster0.v5npwwv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const mongoDBEndpoint = 'mongodb+srv://zilongz0904:Jj6hFWKbl72ACpDJ@cluster0.opo5pqf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 // mongoose.connect(mongoDBEndpoint,  { useNewUrlParser: true });
 
 mongoose
-  .connect("mongodb://localhost:27017/dyt")
+  .connect(mongoDBEndpoint)
   .then(() => {
     console.log("MONGO CONNECTION OPEN!!!");
   })
@@ -22,8 +22,8 @@ mongoose
     console.log(err);
   });
 
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "Error connecting to MongoDB:"));
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Error connecting to MongoDB:"));
 
 // app.use(cors());
 app.use(
@@ -47,6 +47,7 @@ app.get("*", function (req, res) {
   console.log("received request");
   res.sendFile(path.join(frontend_dir, "index.html"));
 });
+
 // Example route to set a cookie
 app.get("/set-cookie", (req, res) => {
   const options = {
@@ -59,6 +60,7 @@ app.get("/set-cookie", (req, res) => {
   res.cookie("token", "example_token", options);
   res.send("Cookie has been set");
 });
+
 app.listen(process.env.PORT || 8000, function () {
   console.log("Starting server now...");
 });
